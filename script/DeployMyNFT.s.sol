@@ -18,11 +18,12 @@ contract DeployGenesis721 is Script{
 	
 	
 	
-	function run() external returns(Genesis721, HelperConfig){
+	function run() external returns(Genesis721){
 		
 		HelperConfig helper = new HelperConfig();
-		(uint256 maxSupply,
-		uint256 deployerKey) = helper.activeNetworkConfig();
+		(
+		uint256 maxSupply,
+		uint256 deployerKey ) = helper.activeNetworkConfig();
 		
 		vm.startBroadcast(deployerKey);
 		Genesis721 genesis = new Genesis721(
@@ -30,6 +31,6 @@ contract DeployGenesis721 is Script{
 		);
 		vm.stopBroadcast();
 		
-		return (genesis, helper);
+		return genesis;
 	}
 }
