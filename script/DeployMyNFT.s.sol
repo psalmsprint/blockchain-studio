@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.30;
 
-import {Script} from "forge-std/Script.sol";
+import {Script, console} from "forge-std/Script.sol";
 import {Genesis721} from "../src/MyNFT.sol";
 import {HelperConfig} from "./HelperConfig.s.sol";
 
@@ -17,8 +17,7 @@ contract DeployGenesis721 is Script{
 	}
 	
 	
-	
-	function run() external returns(Genesis721){
+	function run() external {
 		
 		HelperConfig helper = new HelperConfig();
 		(
@@ -31,6 +30,6 @@ contract DeployGenesis721 is Script{
 		);
 		vm.stopBroadcast();
 		
-		return genesis;
+		console.log("Genesis721 deployed to:", address(genesis));
 	}
 }
