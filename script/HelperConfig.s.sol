@@ -30,7 +30,7 @@ contract HelperConfig is Script{
 	function getSepoliaConfig() public view returns(NetworkConfig memory) {
 		NetworkConfig memory sepoliaConfig = NetworkConfig({
 			maxSupply: 4,
-			deployerKey: vm.envUint("$PRIVATE_KEY")
+			deployerKey: vm.envUint("PRIVATE_KEY")
 		});
 		
 		return sepoliaConfig;
@@ -40,7 +40,7 @@ contract HelperConfig is Script{
 	function getMainnetEthConfig() public view returns(NetworkConfig memory){
 		NetworkConfig memory mainnetConfig = NetworkConfig({
 			maxSupply: 4,
-			deployerKey: vm.envUint("$PRIVATE_KEY")
+			deployerKey: vm.envUint("PRIVATE_KEY")
 		});
 		return mainnetConfig;
 	}
