@@ -21,6 +21,8 @@ contract DeployGenesis721 is Script {
 
         deployerKey = 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80;
 
+        vm.deal(deployerKey, 10 ether);
+
         vm.startBroadcast(deployerKey);
         Genesis721 genesis = new Genesis721(maxSupply);
         vm.stopBroadcast();
