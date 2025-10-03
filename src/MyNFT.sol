@@ -15,6 +15,8 @@ error Genesis721__UnAuthorised();
 error Genesis721__ContractIsPaused();
 error Genesis721__NoBalance();
 error Genesis721__MintedOut();
+error Genesis721__NoneExistedTokenId();
+error Genesis721__InvalidTokenId();
 
 contract Genesis721 {
     using Strings for uint256;
@@ -96,7 +98,7 @@ contract Genesis721 {
 
     function tokenURI(uint256 tokenId) public view returns (string memory) {
         if (s_owner[tokenId] == address(0)) {
-            revert Genesis721__InvalidAddress();
+            revert Genesis721__InvalidTokenId();
         }
 
         return string(abi.encodePacked(baseUri, tokenId.toString(), ".json"));
@@ -111,7 +113,7 @@ contract Genesis721 {
 
     function ownerOf(uint256 tokenId) external view returns (address) {
         if (s_owner[tokenId] == address(0)) {
-            revert Genesis721__InvalidAddress();
+            revert Genesis721__InvalidTokenId();
         }
 
         return s_owner[tokenId];
@@ -194,15 +196,14 @@ contract Genesis721 {
         payable
         whenNotPaused
     {
-        if (s_balance[from] == 0) {
-            revert Genesis721__NoBalance();
-        }
-
         if (to == address(0)) {
             revert Genesis721__InvalidAddress();
         }
 
-        if (s_owner[tokenId] != from && msg.sender != s_approvals[tokenId] && !s_operatorApproval[from][msg.sender]) {
+        if (
+            s_owner[tokenId] != msg.sender && msg.sender != s_approvals[tokenId]
+                && !s_operatorApproval[from][msg.sender]
+        ) {
             revert Genesis721__UnAuthorised();
         }
 
@@ -236,7 +237,10 @@ contract Genesis721 {
             revert Genesis721__InvalidAddress();
         }
 
-        if (s_owner[tokenId] != from && msg.sender != s_approvals[tokenId] && !s_operatorApproval[from][msg.sender]) {
+        if (
+            s_owner[tokenId] != msg.sender && msg.sender != s_approvals[tokenId]
+                && !s_operatorApproval[from][msg.sender]
+        ) {
             revert Genesis721__UnAuthorised();
         }
 
@@ -267,7 +271,7 @@ contract Genesis721 {
 
     function getApproved(uint256 tokenId) external view whenNotPaused returns (address) {
         if (s_owner[tokenId] == address(0)) {
-            revert Genesis721__InvalidAddress();
+            revert Genesis721__NoneExistedTokenId();
         }
 
         return s_approvals[tokenId];
@@ -294,5 +298,29 @@ contract Genesis721 {
 
     function getContractOwner() external view returns (address) {
         return i_owner;
+    }
+
+    function getMaxSupply() external view returns (uint256) {
+        return i_maxSupply;
+    }
+
+    function getTotalMinted() external view returns (uint256) {
+        return s_totalMinted;
+    }
+
+    function getNextTokenId() external view returns (uint256) {
+        return s_nextTokenId;
+    }
+
+    function getBurned() external view returns (uint256) {
+        return s_burned;
+    }
+
+    function getApproval(uint256 tokenId) external view returns (address) {
+        return s_approvals[tokenId];
+    }
+
+    function paused() external view returns (bool) {
+        return s_pause;
     }
 }
